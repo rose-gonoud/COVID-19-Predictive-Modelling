@@ -1,0 +1,3 @@
+const API_KEY = "pk.eyJ1IjoibmhpZ3MiLCJhIjoiY2s4bHY1d3ozMGd5ZDNqcGd3cTU3dXlyNyJ9.z00oDnIgLJRrSKsu2B11dw";
+
+const covidAPI_KEY = "cef0034fc4mshacc8f2885b9826cp1134c0jsnbe10e5819219"
