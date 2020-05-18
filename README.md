@@ -9,7 +9,7 @@ The dashboard will at minimum also include a summary statistics panel and a few 
 
 ### Data Sources
 https://svi.cdc.gov
-https://covid-19-statistics.p.rapidapi.com
+https://rapidapi.com/axisbits-axisbits-default/api/covid-19-statistics
 https://oui.doleta.gov/unemploy/claims.asp
 
 ### Division of Labor in Development
