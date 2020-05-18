@@ -20,9 +20,9 @@ https://oui.doleta.gov/unemploy/claims.asp
 
 #### Rose
 
-- [ ] Will write an instance of the most recent COVID data from an API call to a CSV. This will be distributed to Shaun, Ryan, and Alec so they may all develop candidate neural nets with different parameters. Other variables for their modelling will come from an unemployment dataset (as CSV) and the CDC's social vulnerabolity index data. They'll do their model building in parallel, and on Monday we will compare effectiveness.
+- [ ] Will write an instance of the most recent COVID data from an API call to a CSV. This will be distributed to teammates so they may all develop candidate neural nets with different parameters. Other variables for their modelling will come from an unemployment dataset (as CSV) and the CDC's social vulnerability index data. They'll do their model building in parallel, and on Monday we will compare effectiveness.
 - [ ] Will take my previously deployed Unemployment API from Heroku and add an additional route with a new unemployment dataset. The new dataset has more updated figures from a different source, and its data is resolved down to the county level, rather than just the state level.
-- [ ] Will clean up and fork my previous Project 2 repo so the only contributors to this final project are the four of us, and those updates will not erase or overwrite my Project 2 teammates' work.
+- [x] Will clean up and fork my previous Project 2 repo so the only contributors to this final project are the four of us, and those updates will not erase or overwrite my Project 2 teammates' work.
 
 #### Alec
 

@@ -6,6 +6,7 @@
 // and the async on getCovidData was throwing a dummy resolved promise in the output to prevent error
 // called the return of getCovidData the query
 // and turned the operation into a promise that resolved to root.data
+
 function queryCovidAPI(country_code, date) {
   let baseURL = "https://covid-19-statistics.p.rapidapi.com/reports";
   let queryString = `?iso=${country_code}&date=${date}`;
@@ -64,8 +65,6 @@ async function getCovidData(date = null) {
   return data;
 }
 
-// Nicholas taught me about browser caching to minimize API calls!
-// could be implemented in the Real Version if told to update the cache key in response to user fields
 function storeDataLocally(key, value) {
   return localStorage.setItem(key, JSON.stringify(value));
 }
