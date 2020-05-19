@@ -1,0 +1,2 @@
+covidAPI_KEY = "cef0034fc4mshacc8f2885b9826cp1134c0jsnbe10e5819219"
+# "7ea38606f0msh339d26a4f16ecc7p196cccjsne26963fc81ed"
