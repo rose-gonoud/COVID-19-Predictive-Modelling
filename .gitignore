@@ -1,2 +1,4 @@
 flask/config.py
 assets/.DS_Store
+assets/data/.DS_Store
+assets/data/AGS_data/.DS_Store
