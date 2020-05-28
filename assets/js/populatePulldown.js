@@ -1,12 +1,12 @@
 // Set default dates in date fields
-d3.select("#startDate").property("value", "2020-02-01");
+d3.select("#startDate").property("value", "2020-05-01");
 d3.select("#endDate").property("value", moment().format("YYYY[-]MM[-]DD"));
 
 // Bind the optionChanged method to the input fields
 d3.select("#startDate").on("change", optionChanged);
 
-//Default to initial_claims view
-d3.select("#initial_claims").property("checked", true);
+//Default to percent_unemployed view
+d3.select("#percent_unemployed").property("checked", true);
 
 //TODO Separate Mode change functionality from optionChanged.
 // option changed should be for filters and trigger new API calls
@@ -21,10 +21,7 @@ d3.selectAll(".btn-secondary").on("click", optionChanged);
 optionChanged();
 pullDownMenu();
 
-/**
- *
- * @param {var} value. This function creates array of options using the array of values in @param
- */
+//Populates the pulldown menu with states
 
 function pullDownMenu() {
   var dropdown = d3.select("#selState");
@@ -54,48 +51,68 @@ function optionChanged() {
   startDate = moment(startDate).format("YYYY[-]MM[-]DD");
   endDate = moment(endDate).format("YYYY[-]MM[-]DD");
 
-  //Build Unemployment API call
-  baseURL =
-    "https://unemployment-during-covid19.herokuapp.com/unemploymentData";
-  queryString = `?start_date=${startDate}&end_date=${endDate}`;
+    //Get the value of the selected mode
+    let selectedMode = d3.select('input[name="mode"]:checked').property("id");
+    console.log("currently selected mode", selectedMode);
+  
+    //If one of the county modes is selected then query the county data from the apis
+    countyModes = ["percent_unemployed", "total_unemployed"];
+  
+    //Query county data
+    if (countyModes.includes(selectedMode)) {
+      console.log("Querying county data...");
+  
+      getCountyUnemploymentData(startDate, endDate).then(
+        (countyUnemploymentData) => {
+          //Most Recent unemployment data by county
+          mostRecentCountyUnemploymentData = filterMostRecentWeekData(
+            countyUnemploymentData
+          );
+  
+          buildCountyChloropleth(mostRecentCountyUnemploymentData, selectedMode);
+        }
+      );
+    }
+    //Query state data
+    else {
+      //Build Unemployment API call
+      baseURL =
+        "https://unemployment-during-covid19.herokuapp.com/unemploymentData";
+      queryString = `?start_date=${startDate}&end_date=${endDate}`;
 
-  //If no states are selected, default to returning all state data
-  if (selValues.length > 0) {
-    queryString += `&state_abbr=${selValues.toString()}`;
-  }
+      //If no states are selected, default to returning all state data
+      if (selValues.length > 0) {
+        queryString += `&state_abbr=${selValues.toString()}`;
+      }
 
-  // Call out the the Unemployment API with values from the filter fields
-  d3.json(`${baseURL}${queryString}`, (unemploymentData) => {
-    console.log("unemployment API returned", unemploymentData);
+      // Call out the the Unemployment API with values from the filter fields
+      d3.json(`${baseURL}${queryString}`, (unemploymentData) => {
+        console.log("unemployment API returned", unemploymentData);
 
-    //Generate a line plot
-    buildPlot(unemploymentData);
-    buildPlot1(unemploymentData);
+        //Generate a line plot
+        buildPlot(unemploymentData);
+        buildPlot1(unemploymentData);
 
-    mostRecentUnemploymentData = filterMostRecentWeekData(unemploymentData);
+        mostRecentUnemploymentData = filterMostRecentWeekData(unemploymentData);
 
-    mostRecentUnemploymentDate = moment(
-      mostRecentUnemploymentData[0].file_week_ended
-    ).format("YYYY[-]MM[-]DD");
+        mostRecentUnemploymentDate = moment(
+          mostRecentUnemploymentData[0].file_week_ended
+        ).format("YYYY[-]MM[-]DD");
 
-    getCovidData(mostRecentUnemploymentDate).then((covidData) => {
-      console.log("getCovidData return", covidData);
+        getCovidData(mostRecentUnemploymentDate).then((covidData) => {
+          console.log("getCovidData return", covidData);
 
-      //Stitch covidData and unemploymentData
-      let allData = stitchData(covidData, unemploymentData);
-      console.log("allData", allData);
+          //Stitch covidData and unemploymentData
+          let allData = stitchData(covidData, unemploymentData);
+          console.log("allData", allData);
 
-      //Get the value of the selected mode
-      let selectedMode = d3.select('input[name="mode"]:checked').property("id");
-      console.log("currently selected mode", selectedMode);
-
-      //Put a new chloropleth on the map
-      buildChloropleth(allData, selectedMode);
-      // passing allData into summarystats so that I can also operate on the covid case data inside that return
-      populateSummaryStats(allData);
-    });
-  });
-}
+         //Put a new chloropleth on the map
+         buildStateChloropleth(allData, selectedMode);
+         populateSummaryStats(allData);
+       });
+     });
+   }
+ }
 
 function changeMode(event) {
   console.log("event", event);
