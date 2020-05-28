@@ -4,7 +4,6 @@ d3.select("#endDate").property("value", moment().format("YYYY[-]MM[-]DD"));
 
 // Bind the optionChanged method to the input fields
 d3.select("#startDate").on("change", optionChanged);
-d3.select("#startDate").on("change", optionChanged);
 
 //Default to initial_claims view
 d3.select("#initial_claims").property("checked", true);
@@ -92,7 +91,8 @@ function optionChanged() {
 
       //Put a new chloropleth on the map
       buildChloropleth(allData, selectedMode);
-      populateSummaryStats(unemploymentData);
+      // passing allData into summarystats so that I can also operate on the covid case data inside that return
+      populateSummaryStats(allData);
     });
   });
 }
