@@ -80,6 +80,7 @@ function optionChanged() {
             let allCountyData = stitchCountyData(covidData, mostRecentCountyUnemploymentData)
             console.log("allCountyData", allCountyData)
             buildCountyChloropleth(allCountyData, selectedMode);
+            populateCountySummaryStats(allCountyData);
           });
           
         }
@@ -120,7 +121,7 @@ function optionChanged() {
 
          //Put a new chloropleth on the map
          buildStateChloropleth(allData, selectedMode);
-         populateSummaryStats(allData);
+         populateStateSummaryStats(allData);
        });
      });
    }

@@ -1,9 +1,6 @@
-// We have successfully queried the API and can see it in the .get of the d3.json,
-// But we are having difficulty setting the return of getCovidData to a value that is only accessible
-// In the .get itself.
-
 // d3.json was returning an object, not a promise,
 // and the async on getCovidData was throwing a dummy resolved promise in the output to prevent error
+
 // called the return of getCovidData the query
 // and turned the operation into a promise that resolved to root.data
 
@@ -65,11 +62,6 @@ async function getCovidData(date = null) {
 
   return data;
 }
-
-// step 1 -- new fn that checks a place in cache for county covid data, if exists, and if not query API and store
-// try to store full county return in cache, if that's a prob:
-//  query for only most recent day, that might be small enough to fit in cache
-// 
 
 function storeDataLocally(key, value) {
   return localStorage.setItem(key, JSON.stringify(value));

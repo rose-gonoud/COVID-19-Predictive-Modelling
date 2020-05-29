@@ -28,6 +28,7 @@ https://oui.doleta.gov/unemploy/claims.asp
 - [ ] Add covid data to the state popups
 - [x] Enable the switching of map layers to toggle between state and county geojson files depending on dataset.
 - [ ] Add API route that's connected to a NN file, query params would be NN input vars?
+- [ ] Enable summary stats panel to switch between county stats and state stats with mode changes.
 
 #### Alec
 
