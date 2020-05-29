@@ -56,20 +56,32 @@ function optionChanged() {
     console.log("currently selected mode", selectedMode);
   
     //If one of the county modes is selected then query the county data from the apis
-    countyModes = ["percent_unemployed", "total_unemployed"];
+    countyModes = ["percent_unemployed", "total_unemployed", "county_confirmed", "county_deaths"];
   
     //Query county data
     if (countyModes.includes(selectedMode)) {
       console.log("Querying county data...");
   
+      // checks the cache, if empty, queries the county route on unemployment API, awaits promise return
       getCountyUnemploymentData(startDate, endDate).then(
         (countyUnemploymentData) => {
           //Most Recent unemployment data by county
           mostRecentCountyUnemploymentData = filterMostRecentWeekData(
             countyUnemploymentData
           );
-  
-          buildCountyChloropleth(mostRecentCountyUnemploymentData, selectedMode);
+
+          mostRecentCountyUnemploymentDate = moment(
+            mostRecentCountyUnemploymentData[0].file_week_ended
+          ).format("YYYY[-]MM[-]DD");
+
+          getCovidData(mostRecentCountyUnemploymentDate).then(covidData => {
+            console.log("county covid return", covidData, mostRecentCountyUnemploymentData)
+
+            let allCountyData = stitchCountyData(covidData, mostRecentCountyUnemploymentData)
+            console.log("allCountyData", allCountyData)
+            buildCountyChloropleth(allCountyData, selectedMode);
+          });
+          
         }
       );
     }
@@ -129,6 +141,7 @@ function stitchData(covidData, unemploymentData) {
         covidDatum.date ==
           moment(unemploymentDatum.file_week_ended).format("YYYY[-]MM[-]DD")
       ) {
+        // "..." grabs all properties within the var that follows
         let returnDatum = { ...covidDatum, ...unemploymentDatum };
         returnArray.push(returnDatum);
       }
@@ -137,3 +150,36 @@ function stitchData(covidData, unemploymentData) {
 
   return returnArray;
 }
+
+// Takes the result of county unemployment API call and the covid API return (which contains county covid data)
+//  and stitches them into an array with one entry per county per date.
+function stitchCountyData(covidData, countyUnemploymentData) {
+  returnArray = []
+
+  countyUnemploymentData.forEach((countyUnemploymentDatum) => {
+    let matchedCounty = false
+
+    covidData.forEach((covidDatum) => {
+      covidDatum.region.cities.forEach((countyCovidDatum) => {
+        if (countyUnemploymentDatum.county_code == countyCovidDatum.fips &&
+          countyCovidDatum.date == moment(countyUnemploymentDatum.file_week_ended).format("YYYY[-]MM[-]DD")
+          ) {
+          
+          let returnDatum = {...countyCovidDatum,
+                            ...countyUnemploymentDatum,
+                            county_deaths:countyCovidDatum.deaths,
+                            county_confirmed:countyCovidDatum.confirmed}
+          returnArray.push(returnDatum)
+          matchedCounty = true
+        }
+
+      });
+    });
+    if(!matchedCounty) {
+      returnArray.push(countyUnemploymentDatum)
+    }
+  });
+  return returnArray;
+}
+
+// map layer issue!

@@ -157,7 +157,6 @@ function zipAPIDataToCountyGeoJSON(geoData, apiReturn, mode) {
 
 //Given a value returns a color code
 function getColor(d, mode) {
-  console.log("mode", mode);
 
   options = getColorModeOptions(mode);
 
@@ -225,6 +224,45 @@ function getColorModeOptions(mode) {
         0,
       ],
     };
+  } else if (mode == "county_confirmed") {
+    return {
+      highColor: "#1F3D0C",
+      lowColor: "#ffffff",
+      bins: [
+        10000,
+        5000,
+        2500,
+        1000,
+        500,
+        250,
+        100,
+        50,
+        30,
+        10,
+        0,
+      ]
+    }
+  } else if (mode == "county_deaths") {
+    return {
+      highColor: "#1F3D0C",
+      lowColor: "#ffffff",
+      bins: [
+        5000,
+        2500,
+        1000,
+        500,
+        250,
+        100,
+        75,
+        50,
+        30,
+        20,
+        10,
+        5,
+        1,
+        0,
+      ]
+    }
   }
 }
 
@@ -262,14 +300,8 @@ function addLegend(myMap, mode) {
 //  both must be searched for and deleted at the time of a mode switch
 //  to ensure that the on-page-load county layer doesn't repopulate the map before a potential incoming state layer.
 function removeAllGeojson() {
-  if (stateGeojson) {
-    console.log("removing old state geojson");
-    stateGeojson.remove();
-  }
-  if (countyGeojson) {
-    console.log("removing old county geojson");
-    countyGeojson.remove();
-  }
+  stateGeojson && stateGeojson.remove()
+  countyGeojson && countyGeojson.remove();
 };
 
 //Generates a chloropleth map layer of states colored by the variable in the mode

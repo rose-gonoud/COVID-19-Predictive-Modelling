@@ -1,3 +1,6 @@
+// make new functions or an altogether new populateSummaryStats() that can handle the content of the stitched county data
+//  all the text here is specific to the content of the allData stitched state array
+
 //Populates the summary statistics box according to the data returned
 function populateSummaryStats(data) {
   // clears old stats
