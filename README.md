@@ -20,7 +20,7 @@ https://oui.doleta.gov/unemploy/claims.asp
 
 #### Rose
 
-- [x] Write an instance of the most recent COVID data from an API call to a CSV. Distributed to teammates so they may all develop candidate neural nets with different parameters.
+- [x] Write an instance of the most recent COVID data from an API call to a CSV. Distribute to teammates so they may all develop candidate neural nets with different parameters.
 - [x] Will take my previously deployed Unemployment API from Heroku and add an additional route with a new unemployment dataset. The new dataset has more updated figures from a different source, and its data is resolved down to the county level, rather than just the state level.
 - [x] Will clean up and fork my previous Project 2 repo so the only contributors to this final project are the four of us, and those updates will not erase or overwrite my Project 2 teammates' work.
 - [x] Add new data from AGS county unemployment dataset to our master database -- drop old table and re-add with new estimates.
@@ -38,7 +38,3 @@ https://oui.doleta.gov/unemploy/claims.asp
 
 - [ ] Continue fine-tuning the NN to predict % of county populations with COVID 30 days after lockdown.
 - [ ] Update a general regression analysis and perhaps create more specific additional regression analyses for additional site table.
-
-#### Unassigned
-
-- [ ] Dashboard page updates, in particular new/additional figures.
