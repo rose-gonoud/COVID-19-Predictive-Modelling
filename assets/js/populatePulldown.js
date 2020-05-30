@@ -180,6 +180,21 @@ function stitchCountyData(covidData, countyUnemploymentData) {
   countyUnemploymentData.forEach((countyUnemploymentDatum) => {
     let matchedCounty = false;
 
+    // Append state data from lookup
+    var formattedCountyCode = countyUnemploymentDatum.county_code;
+    if (formattedCountyCode.length == 4) {
+      formattedCountyCode = "0" + formattedCountyCode;
+    }
+    console.log("formattedCountyCode", formattedCountyCode);
+
+    let state_abbr;
+
+    try {
+      state_abbr = fipsLookup[formattedCountyCode].state;
+    } catch (err) {
+      state_abbr = null;
+    }
+
     covidData.forEach((covidDatum) => {
       covidDatum.region.cities.forEach((countyCovidDatum) => {
         if (
@@ -195,6 +210,7 @@ function stitchCountyData(covidData, countyUnemploymentData) {
             county_deaths: countyCovidDatum.deaths,
             county_confirmed: countyCovidDatum.confirmed,
             state: covidDatum.region.province,
+            state_abbr: state_abbr,
           };
           returnArray.push(returnDatum);
           matchedCounty = true;
@@ -202,7 +218,10 @@ function stitchCountyData(covidData, countyUnemploymentData) {
       });
     });
     if (!matchedCounty) {
-      returnArray.push(countyUnemploymentDatum);
+      returnArray.push({
+        ...countyUnemploymentDatum,
+        state_abbr: state_abbr,
+      });
     }
   });
   return returnArray;
