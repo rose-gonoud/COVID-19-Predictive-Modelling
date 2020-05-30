@@ -328,15 +328,12 @@ function buildStateChloropleth(apiReturn, mode = "initial_claims") {
     function onEachFeature(feature, layer) {
       layer.bindPopup(
         `${feature.properties.state}
-        <br/>File Week Ended: ${moment(
-          feature.properties.file_week_ended
-        ).format("MMMM Do YYYY")}
+        <br/>File Week Ended: ${moment(feature.properties.file_week_ended).format("MMMM Do YYYY")}
           <br/>New Unemployment Claims: ${feature.properties.initial_claims}
           <br/>Continued Claims: ${feature.properties.continued_claims}
-          <br/>Unemployment Rate: ${
-            feature.properties.insured_unemployment_rate
-          }
-          `
+          <br/>Unemployment Rate: ${feature.properties.insured_unemployment_rate}%
+          <br/>Total Covid Cases: ${feature.properties.confirmed}
+          <br/>Total Covid Deaths: ${feature.properties.deaths}`
       );
     }
 
@@ -374,16 +371,12 @@ function buildCountyChloropleth(apiReturn, mode = "initial_claims") {
 
     function onEachFeature(feature, layer) {
       layer.bindPopup(
-        `${feature.properties.state}
-        <br/>File Week Ended: ${moment(
-          feature.properties.file_week_ended
-        ).format("MMMM Do YYYY")}
-          <br/>New Unemployment Claims: ${feature.properties.initial_claims}
-          <br/>Continued Claims: ${feature.properties.continued_claims}
-          <br/>Unemployment Rate: ${
-            feature.properties.insured_unemployment_rate
-          }
-          `
+        `${feature.properties.county_name}
+        <br/>File Week Ended: ${moment(feature.properties.file_week_ended).format("MMMM Do YYYY")}
+          <br/>Percent Unemployed: ${feature.properties.percent_unemployed}%
+          <br/>Total Unemployed: ${feature.properties.total_unemployed}
+          <br/>Total Covid Cases: ${feature.properties.confirmed}
+          <br/>Total Covid Deaths: ${feature.properties.deaths}`
       );
     }
 

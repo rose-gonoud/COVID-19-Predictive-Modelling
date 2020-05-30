@@ -25,10 +25,10 @@ https://oui.doleta.gov/unemploy/claims.asp
 - [x] Will clean up and fork my previous Project 2 repo so the only contributors to this final project are the four of us, and those updates will not erase or overwrite my Project 2 teammates' work.
 - [x] Add new data from AGS county unemployment dataset to our master database -- drop old table and re-add with new estimates.
 - [x] Expand the summary statistics panel to include covid case info.
-- [ ] Add covid data to the state popups
+- [x] Add covid data to the state popups
 - [x] Enable the switching of map layers to toggle between state and county geojson files depending on dataset.
 - [ ] Add API route that's connected to a NN file, query params would be NN input vars?
-- [ ] Enable summary stats panel to switch between county stats and state stats with mode changes.
+- [x] Enable summary stats panel to switch between county stats and state stats with mode changes.
 
 #### Alec
 
