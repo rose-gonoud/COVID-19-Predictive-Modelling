@@ -6,8 +6,8 @@ The model will compute the weight of each input social and economic variable, an
 
 The dashboard will at minimum also include a summary statistics panel and a few graphical data viualizations that are user responsive -- the user can select states, counties, and time windows they are interested in, and visualization will update accordingly. We plan to also include a raw data page for transparency into our sources and methods.
 
-
 ### Data Sources
+
 https://svi.cdc.gov
 https://rapidapi.com/axisbits-axisbits-default/api/covid-19-statistics
 https://oui.doleta.gov/unemploy/claims.asp
@@ -32,7 +32,7 @@ https://oui.doleta.gov/unemploy/claims.asp
 
 #### Alec
 
-- [ ] Creating an additional sources page.
+- [x] Creating an additional sources page.
 
 #### Ryan
 
