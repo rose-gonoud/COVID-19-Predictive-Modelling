@@ -90,8 +90,6 @@ function optionChanged() {
             mostRecentCountyUnemploymentData
           );
 
-          console.log("allCountyData", allCountyData);
-
           // filters out unselected states, if at least one state is selected
           if (selValues.length > 0) {
             console.log("filtering states...", selValues);
