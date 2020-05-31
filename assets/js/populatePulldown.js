@@ -102,6 +102,7 @@ function optionChanged() {
 
           buildCountyChloropleth(allCountyData, selectedMode);
           populateCountySummaryStats(allCountyData);
+          buildBarGraph(allCountyData);
         });
       }
     );
@@ -185,7 +186,7 @@ function stitchCountyData(covidData, countyUnemploymentData) {
     if (formattedCountyCode.length == 4) {
       formattedCountyCode = "0" + formattedCountyCode;
     }
-    console.log("formattedCountyCode", formattedCountyCode);
+    //console.log("formattedCountyCode", formattedCountyCode);
 
     let state_abbr;
 

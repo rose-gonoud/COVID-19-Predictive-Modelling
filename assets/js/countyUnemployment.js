@@ -25,7 +25,7 @@ function queryCountyUnemploymentAPI(start_date, end_date, county_FIPS) {
   });
 }
 
-//Gets the county unemployment data from local storage if it exists, otherwise queries the api and writes to storage
+Gets the county unemployment data from local storage if it exists, otherwise queries the api and writes to storage
 async function getCountyUnemploymentData(
   start_date = "2020-01-01",
   end_date
@@ -57,7 +57,7 @@ async function getCountyUnemploymentData(
   // if the earliest date in the cache is > start_date, or the latest date in the cache is < end date
   //  re-query the api and use those results.
   else if (
-    start_date > lastQueriedStartDate || 
+    start_date > lastQueriedStartDate ||
     end_date < lastQueriedEndDate) {
       console.log("cache does not overlap with selected dates, querying API")
       countyUnemploymentData = await queryCountyUnemploymentAPI(
