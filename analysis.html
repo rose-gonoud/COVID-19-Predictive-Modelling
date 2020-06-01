@@ -18,7 +18,9 @@
             <a class="navbar-brand" href="index.html">Home</a>
             <a class="navbar-brand" href="table.html">Data</a>
             <a class="navbar-brand" href="sources.html">Sources</a>
-            <a class="navbar-brand" href="analysis.html">Analysis</a>
+            <a class="navbar-brand" href="analysis.html"
+              >COVID-19 Vulnerability Analysis</a
+            >
           </div>
         </div>
       </nav>
@@ -28,7 +30,7 @@
           Unemployment<br />
           in the Age of COVID-19
         </h1>
-        <p>Analysis</p>
+        <p>COVID-19 Vulnerability Analysis</p>
       </div>
 
       <div class="container-fluid">
@@ -36,35 +38,125 @@
           <div class="col-lg-12 col-md-12">
             <section>
               <div>
+                <h1>Methods</h1>
                 <br />
-                <hr />
-                <h1>COVID-19 State Case Number Predictors</h1>
-                <h5>Elements of the CDC's Social Vulnerability Index</h5>
-                <br />
-                <img
-                  id="predictors"
-                  src="images/confirmed-cases-regression.png"
-                  alt="confirmed-cases-regression"
-                />
-                <br />
+                <p>
+                  &nbsp; &nbsp; &nbsp; &nbsp; Linear regressions (standard
+                  entry) were conducted on the percent of confirmed cases of the
+                  novel coronavirus and the percent of deaths attributed to the
+                  novel coronavirus reported 30 days post state lockdown order
+                  using variables taken from the 2018 Social Vulnerability Index
+                  (SVI; Centers for Disease Control and Prevention, 2018). The
+                  percentages were calculated using 2014-2018 county-level
+                  population data taken from the SVI. Both the SVI variables and
+                  the coronavirus data were indexed at the county level.
+                  <br />
+
+                  &nbsp; &nbsp; &nbsp; &nbsp; SVI variables that were used as predictors included county
+                  area in square miles, housing unit estimate, households
+                  estimate, persons below poverty estimate, civilian (age 16+)
+                  unemployed estimate, per capita income estimate, persons (age
+                  25+) with no high school diploma estimate, persons aged 65 and
+                  older estimate, persons aged 17 and younger estimate, civilian
+                  noninstitutionalized population with a disability estimate,
+                  single parent household with children under 18 estimate,
+                  minority (all persons except white, non-Hispanic) estimate,
+                  persons (age 5+) who speak English “less than well” estimate,
+                  housing in structures with 10 or more units estimate, mobile
+                  homes estimate, at household level (occupied housing units),
+                  more people than rooms estimate, households with no vehicles
+                  available estimate, and persons in institutionalized group
+                  quarters estimate.
+                </p>
                 <hr />
               </div>
             </section>
-          </div>
-          <div class="col-lg-12 col-md-12">
-            <section>
-              <div>
-                <h1>COVID-19 State Death Predictors</h1>
-                <h5>Elements of the CDC's Social Vulnerability Index</h5>
-                <br />
-                <img
-                  id="predictors"
-                  src="images/deaths-regression.png"
-                  alt="deaths-regression"
-                />
-                <hr />
+            <div class="col-lg-12 col-md-12">
+              <section>
+                <div>
+                  <br />
+                  <hr />
+                  <h1>COVID-19 State Case Number Predictors</h1>
+                  <h5>Elements of the CDC's Social Vulnerability Index</h5>
+                  <br />
+                  <img
+                    id="predictors"
+                    src="images/confirmed-cases-regression.png"
+                    alt="confirmed-cases-regression"
+                  />
+                  <br />
+                  <hr />
+                  <h3>Confirmed Coronavirus Cases</h3>
+                  <p>
+                    &nbsp; &nbsp; &nbsp; &nbsp; A standard entry regression was
+                    conducted on the percent of confirmed coronavirus cases.
+                    This resulted in a significant model, R = .94, R<sup>2</sup> = .88,
+                    F(18, 2,499) = 1019.356, p < 0.001. Five variables failed to
+                    significantly contribute to the model, including county area
+                    in square miles, housing unit estimate, civilian
+                    noninstitutionalized population with a disability estimate,
+                    persons (age 5+) who speak English “less than well”
+                    estimate, and mobile homes estimate. Significant
+                    contributors (assessed via a series of t-tests, which are
+                    omitted here; note that sr<sup>2</sup>unique refers to the squared
+                    proportion of variance uniquely explained by each predictor
+                    variable) included households estimate (sr<sup>2</sup>unique = .009),
+                    persons below poverty estimate (sr<sup>2</sup>unique = .005), civilian
+                    (age 16+) unemployed estimate (sr<sup>2</sup>unique = .003), per capita
+                    income estimate (sr<sup>2</sup>unique = .0002), persons (age 25+) with
+                    no high school diploma estimate (sr<sup>2</sup>unique = .001), persons
+                    aged 65 and older estimate (sr<sup>2</sup>unique = .011), persons aged
+                    17 and younger estimate (sr<sup>2</sup>unique = .044), single parent
+                    household with children under 18 estimate (sr<sup>2</sup>unique =
+                    .0003), minority (all persons except white, non-Hispanic)
+                    estimate (sr<sup>2</sup>unique = .010), housing in structures with 10
+                    or more units estimate (sr<sup>2</sup>unique = .001), at household
+                    level (occupied housing units), more people than rooms
+                    estimate (sr<sup>2</sup>unique = .001), households with no vehicles
+                    available estimate (sr<sup>2</sup>unique = .119), and persons in
+                    institutionalized group quarters estimate (sr<sup>2</sup>unique =
+                    .003).
+                  </p>
+                  <hr />
               </div>
             </section>
+            <div class="col-lg-12 col-md-12">
+              <section>
+                <div>
+                  <br />
+                  <hr />
+                  <h1>COVID-19 State Death Predictors</h1>
+                  <h5>Elements of the CDC's Social Vulnerability Index</h5>
+                  <br />
+                  <img
+                    id="predictors"
+                    src="images/deaths-regression.png"
+                    alt="deaths-regression"
+                  />
+                  <hr />
+                  <h3>Confirmed Coronavirus Related Deaths</h3>
+                  <p> 
+                    &nbsp; &nbsp; &nbsp; &nbsp; A standard entry regression was conducted on the percent of deaths 
+                    attributed to the coronavirus. This resulted in a significant model, 
+                    R = .96, R<sup>2</sup> = .91, F(18, 2,499) = 1424.357, p < 0.001. Two variables failed to 
+                    significantly contribute to the model, including county area in square 
+                    miles and persons (age 25+) with no high school diploma estimate. 
+                    Significant contributors (assessed via a series of t-tests, which are omitted here) 
+                    included housing unit estimate (sr<sup>2</sup>unique = .011), households estimate (sr<sup>2</sup>unique = .086), 
+                    persons below poverty estimate (sr<sup>2</sup>unique = .033), civilian (age 16+) unemployed estimate 
+                    (sr<sup>2</sup>unique = .041), per capita income estimate (sr<sup>2</sup>unique = .007), persons aged 65 and older 
+                    estimate (sr<sup>2</sup>unique = .077), persons aged 17 and younger estimate (sr<sup>2</sup>unique = .320), 
+                    civilian noninstitutionalized population with a disability estimate (sr<sup>2</sup>unique = .012), 
+                    single parent household with children under 18 estimate (sr<sup>2</sup>unique = .013), minority 
+                    (all persons except white, non-Hispanic) estimate (sr<sup>2</sup>unique = .053), persons (age 5+) 
+                    who speak English “less than well” estimate (sr<sup>2</sup>unique = .021), housing in structures 
+                    with 10 or more units estimate (sr<sup>2</sup>unique = .213), mobile homes estimate (sr<sup>2</sup>unique = .016), 
+                    at household level (occupied housing units), more people than rooms estimate (sr<sup>2</sup>unique = .016), 
+                    households with no vehicles available estimate (sr<sup>2</sup>unique = .551), and persons in 
+                    institutionalized group quarters estimate (sr<sup>2</sup>unique = .004).</p>
+                </div>
+              </section>
+            </div>
           </div>
         </div>
       </div>
