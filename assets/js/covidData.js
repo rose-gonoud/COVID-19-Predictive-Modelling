@@ -1,9 +1,6 @@
-// We have successfully queried the API and can see it in the .get of the d3.json,
-// But we are having difficulty setting the return of getCovidData to a value that is only accessible
-// In the .get itself.
-
 // d3.json was returning an object, not a promise,
 // and the async on getCovidData was throwing a dummy resolved promise in the output to prevent error
+
 // called the return of getCovidData the query
 // and turned the operation into a promise that resolved to root.data
 
@@ -25,6 +22,7 @@ function queryCovidAPI(country_code, date) {
 /** Queries the CovidAPI to get data for a specific date.
  * if none is provided, then it defaults to yesterday
  */
+// placing assignment "=" on an argument within func def means that arg defaults to supplied value if no arg is provided in fn call
 async function getCovidData(date = null) {
   console.log("getCovidData date", date);
 

@@ -16,6 +16,12 @@ body {
   margin-bottom: 2rem;
 }
 
+#map-details {
+  text-align: left;
+  color: lightgray;
+  font-size: 12pt;
+}
+
 .leaflet-popup-content {
   text-align: center;
 }
@@ -104,18 +110,8 @@ body {
   margin: 0;
 }
 
-/* This CSS styles the ufo icon in the navbar */
-.nav-ufo {
-  position: absolute;
-  bottom: 5px;
-  left: 150px;
-  width: 35px;
-  color: white;
-}
-
-/* Adding styles to the aside and filter form */
-.ufo-form {
-  margin-top: 50px;
+.navbar-header {
+  align-items: center;
 }
 
 .panel-title {
@@ -180,20 +176,21 @@ select {
 /* The styles for the parallax */
 .hero {
   position: relative;
-  height: 550px;
+  height: 300px;
   padding: 20px;
   margin: 0;
   background: black;
-  background-image: url("../../images/logo01.jpeg");
+  background-image: url("../../images/logo04.jpeg");
   background-attachment: fixed;
   background-position: bottom center;
   background-size: cover;
 }
 
 .hero h1 {
-  margin-top: 200px;
+  margin-top: 50px;
   font-size: 0.1rem;
   animation: title 1.2s forwards linear;
+  text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
 }
 
 .hero p {
@@ -342,4 +339,9 @@ select {
 
 .table-head {
   font-size: 14pt;
+}
+
+img {
+  height: 70%;
+  width: 70%;
 }

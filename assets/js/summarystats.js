@@ -1,33 +1,90 @@
-//Populates the summary statistics box according to the data returned
-function populateSummaryStats(data) {
-  d3.select("#summaryStats").text(" ");
+// either fn below can populate the summary statistics box, depending on type of data returned
+function populateStateSummaryStats(data) {
+  // clears old stats
+  d3.select("#unempStats").text(" ");
+  let unemp = calculateStateUnempStats(data);
 
-  let stats = calculateStats(data);
+  for (let [key, value] of Object.entries(unemp)) {
+    d3.select("#unempStats").append("div").text(`${key} : ${value}`);
+  }
 
-  for (let [key, value] of Object.entries(stats)) {
-    d3.select("#summaryStats").append("div").text(`${key} : ${value}`);
+  // clears old stats
+  d3.select("#covidStats").text(" ");
+  let covid = calculateStateCovidStats(data);
+
+  for (let [key, value] of Object.entries(covid)) {
+    d3.select("#covidStats").append("div").text(`${key} : ${value}`);
   }
 }
 
-// Takes in a data set and returns an object of relevant statistics
-function calculateStats(data) {
-  stats = {};
+function populateCountySummaryStats(data) {
+  // clears old stats
+  d3.select("#unempStats").text(" ");
+  let unemp = calculateCountyUnempStats(data);
 
-  stats[
+  for (let [key, value] of Object.entries(unemp)) {
+    d3.select("#unempStats").append("div").text(`${key} : ${value}`);
+  }
+
+  // clears old stats
+  d3.select("#covidStats").text(" ");
+  let covid = calculateCountyCovidStats(data);
+
+  for (let [key, value] of Object.entries(covid)) {
+    d3.select("#covidStats").append("div").text(`${key} : ${value}`);
+  }
+}
+
+// State functions:
+// -------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------
+
+// Takes in unemployment data set and returns an object of relevant statistics
+function calculateStateUnempStats(data) {
+  unemp = {};
+
+  unemp[
     "State With the Most Continued Claims (Entire Set)"
   ] = getStateWithMaxContClaims(data);
-  stats[
+  unemp[
     "State with Most Continued Claims (Most Current Week)"
   ] = getStateWithMaxContClaims(filterMostRecentWeekData(data));
-  stats["Average Number of New Claims"] = getAvgNewClaims(data);
-  stats["Average Unemployment Rate"] = getAvgUnemploymentRate(data);
-  stats["State With Highest Unemployment Rate"] = getStateWithMaxUnempRate(
-    data
-  );
+  unemp["Average Number of New Claims"] = getAvgNewClaims(data);
+  unemp["Average Unemployment Rate"] = getAvgUnemploymentRate(data);
+  unemp["State With Highest Unemployment Rate"] = getStateWithMaxUnempRate(data);
 
   maxDate = filterMostRecentWeekData(data);
 
-  return stats;
+  return unemp;
+}
+
+// Takes in covid data set and returns an object of relevant statistics
+function calculateStateCovidStats(data) {
+  covid = {};
+
+  stateMaxCovidCasesES = getStateWithMaxCovidCases(data)
+  stateMaxCovidCasesRW = getStateWithMaxNewCovidCases(filterMostRecentWeekData(data))
+  stateMaxCovidDeathsES = getStateWithMaxCovidDeaths(data)
+  stateMaxCovidDeathsRW = getStateWithMaxNewCovidDeaths(filterMostRecentWeekData(data))
+
+  covid[
+    "State With Most COVID Cases (Entire Set)"
+  ] = `${stateMaxCovidCasesES[0]}, ${stateMaxCovidCasesES[1]}`;
+  covid[
+    "State with Most COVID Cases (Most Recent Week)"
+  ] = `${stateMaxCovidCasesRW[0]}, ${stateMaxCovidCasesRW[1]}`;
+  covid[
+    "State With Most COVID Deaths (Entire Set)"
+  ] = `${stateMaxCovidDeathsES[0]}, ${stateMaxCovidDeathsES[1]}`;
+  covid[
+    "State with Most COVID Deaths (Most Recent Week)"
+  ] = `${stateMaxCovidDeathsRW[0]}, ${stateMaxCovidDeathsRW[1]}`;
+
+
+  maxDate = filterMostRecentWeekData(data);
+
+  return covid;
+
 }
 
 function getStateWithMaxContClaims(data) {
@@ -140,4 +197,181 @@ function filterMostRecentWeekData(data) {
   });
 
   return filteredSet;
+}
+
+// State COVID functions :
+// ------------------------------------------------------------------------------------
+
+function getStateWithMaxCovidCases(data) {
+  //Get the state with the most covid cases within the period.
+  let allCases = data.map((entry) => {
+    return entry.confirmed;
+  });
+
+  let maxCases = Math.max(...allCases);
+  let maxCasesIndex = allCases.indexOf(maxCases);
+
+  return [data[maxCasesIndex].state, maxCases];
+}
+
+function getStateWithMaxNewCovidCases(data) {
+  let allNewCases = data.map((entry) => {
+    return entry.confirmed_diff;
+  });
+
+  let maxNewCases = Math.max(...allNewCases);
+  let maxNewCasesIndex = allNewCases.indexOf(maxNewCases);
+
+  return [data[maxNewCasesIndex].state, maxNewCases];
+}
+
+function getStateWithMaxCovidDeaths(data) {
+  let allDeaths = data.map((entry) => {
+    return entry.deaths;
+  });
+
+  let maxDeaths = Math.max(...allDeaths);
+  let maxDeathsIndex = allDeaths.indexOf(maxDeaths);
+
+  return [data[maxDeathsIndex].state, maxDeaths];
+}
+
+function getStateWithMaxNewCovidDeaths(data) {
+  let allNewDeaths = data.map((entry) => {
+    return entry.deaths_diff;
+  });
+
+  let maxNewDeaths = Math.max(...allNewDeaths);
+  let maxNewDeathsIndex = allNewDeaths.indexOf(maxNewDeaths);
+
+  return [data[maxNewDeathsIndex].state, maxNewDeaths];
+}
+
+// County functions:
+// -------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------
+
+// Takes in unemployment data set and returns an object of relevant statistics
+function calculateCountyUnempStats(data) {
+  unemp = {};
+
+  countyMaxUnempRate = getCountyMaxUnempRate(data)
+  countyMaxUnempNum = getCountyMaxUnempNum(data)
+
+  unemp["County With Highest Unemployment Rate"] = `${countyMaxUnempRate[0]}, ${countyMaxUnempRate[1]}%`;
+  unemp["County With Highest Number of Unemployed Persons"] = `${countyMaxUnempNum[0]}, ${countyMaxUnempNum[1]}`;
+
+  return unemp;
+}
+
+// Takes in covid data set and returns an object of relevant statistics
+function calculateCountyCovidStats(data) {
+  covid = {};
+
+  countyMaxCovidCasesES = getCountyWithMaxCovidCases(data)
+  countyMaxCovidCasesRW = getCountyWithMaxNewCovidCases(filterMostRecentWeekData(data))
+  countyMaxCovidDeathsES = getCountyWithMaxCovidDeaths(data)
+  countyMaxCovidDeathsRW = getCountyWithMaxNewCovidDeaths(filterMostRecentWeekData(data))
+
+  covid[
+    "County With Most COVID Cases (Entire Set)"
+  ] = `${countyMaxCovidCasesES[0]}, ${countyMaxCovidCasesES[1]}`;
+  covid[
+    "County with Most COVID Cases (Most Recent Week)"
+  ] = `${countyMaxCovidCasesRW[0]}, ${countyMaxCovidCasesRW[1]}`;
+  covid[
+    "County With Most COVID Deaths (Entire Set)"
+  ] = `${countyMaxCovidDeathsES[0]}, ${countyMaxCovidDeathsES[1]}`;
+  covid[
+    "County with Most COVID Deaths (Most Recent Week)"
+  ] = `${countyMaxCovidDeathsRW[0]}, ${countyMaxCovidDeathsRW[1]}`;
+
+
+  maxDate = filterMostRecentWeekData(data);
+
+  return covid;
+
+}
+
+// County Unemployment functions :
+// ------------------------------------------------------------------------------------
+
+function getCountyMaxUnempRate(data) {
+  //Get the state with the most open claims within the period.
+  let allUnempRates = data.map((entry) => {
+    return entry.percent_unemployed;
+  });
+
+  let maxUnempRates = Math.max(...allUnempRates);
+
+  let maxUnempRatesIndex = allUnempRates.indexOf(maxUnempRates);
+
+  return [data[maxUnempRatesIndex].county_name, maxUnempRates];
+}
+
+function getCountyMaxUnempNum(data) {
+  //Get the state with the most open claims within the period.
+  let allUnemployed = data.map((entry) => {
+    return entry.total_unemployed;
+  });
+
+  let maxUnemployed = Math.max(...allUnemployed);
+
+  let maxUnemployedIndex = allUnemployed.indexOf(maxUnemployed);
+
+  return [data[maxUnemployedIndex].county_name, maxUnemployed];
+}
+
+// County COVID functions :
+// ------------------------------------------------------------------------------------
+
+function getCountyWithMaxCovidCases(data) {
+  //Get the state with the most covid cases within the period.
+  let allCases = data.map((entry) => {
+    return entry.confirmed;
+  });
+
+  filtered = allCases.filter( entry => Boolean(entry))
+
+  let maxCases = Math.max(...filtered);
+  let maxCasesIndex = allCases.indexOf(maxCases);
+  console.log( maxCases, maxCasesIndex)
+
+  return [data[maxCasesIndex].county_name, maxCases];
+}
+
+function getCountyWithMaxNewCovidCases(data) {
+  let allNewCases = data.map((entry) => {
+    return entry.confirmed_diff;
+  });
+
+  filtered = allNewCases.filter( entry => Boolean(entry))
+  let maxNewCases = Math.max(...filtered);
+  let maxNewCasesIndex = allNewCases.indexOf(maxNewCases);
+
+  return [data[maxNewCasesIndex].county_name, maxNewCases];
+}
+
+function getCountyWithMaxCovidDeaths(data) {
+  let allDeaths = data.map((entry) => {
+    return entry.deaths;
+  });
+
+  filtered = allDeaths.filter( entry => Boolean(entry))
+  let maxDeaths = Math.max(...filtered);
+  let maxDeathsIndex = allDeaths.indexOf(maxDeaths);
+
+  return [data[maxDeathsIndex].county_name, maxDeaths];
+}
+
+function getCountyWithMaxNewCovidDeaths(data) {
+  let allNewDeaths = data.map((entry) => {
+    return entry.deaths_diff;
+  });
+
+  filtered = allNewDeaths.filter( entry => Boolean(entry))
+  let maxNewDeaths = Math.max(...filtered);
+  let maxNewDeathsIndex = allNewDeaths.indexOf(maxNewDeaths);
+
+  return [data[maxNewDeathsIndex].county_name, maxNewDeaths];
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <title>US Unemployment</title>
+    <title>COVID-19 & Unemployment</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -89,13 +89,15 @@
           <div class="navbar-header">
             <a class="navbar-brand" href="index.html">Home</a>
             <a class="navbar-brand" href="table.html">Data</a>
+            <a class="navbar-brand" href="analysis.html">Analysis</a>
+            <a class="navbar-brand" href="sources.html">Sources</a>
           </div>
         </div>
       </nav>
 
       <div class="hero text-center">
         <h1>
-          Unemployment Data <br />
+          Unemployment<br />
           in the Age of COVID-19
         </h1>
       </div>
@@ -154,6 +156,7 @@
         <!-- Map -->
         <div class="row">
           <div class="well" align="center" style="width: 100%;">
+            <div id="map-details"></div>
             <div id="map"></div>
 
             <!-- Radio buttons that look like regular buttons -->
@@ -189,6 +192,53 @@
                 <input type="radio" name="mode" id="deaths" class="mode-btn" />
                 Covid Deaths
               </label>
+              <label class="btn btn-secondary">
+                <input
+                  type="radio"
+                  name="mode"
+                  id="covid-unemployment-residual"
+                  class="mode-btn"
+                />
+                Covid-Unemployment Residuals
+              </label>
+              <br />
+              <br />
+              <label class="btn btn-secondary">
+                <input
+                  type="radio"
+                  name="mode"
+                  id="percent_unemployed"
+                  class="mode-btn"
+                />
+                County Percent Unemployed
+              </label>
+              <label class="btn btn-secondary">
+                <input
+                  type="radio"
+                  name="mode"
+                  id="total_unemployed"
+                  class="mode-btn"
+                />
+                County Total Unemployed
+              </label>
+              <label class="btn btn-secondary">
+                <input
+                  type="radio"
+                  name="mode"
+                  id="county_confirmed"
+                  class="mode-btn"
+                />
+                County Covid Cases
+              </label>
+              <label class="btn btn-secondary">
+                <input
+                  type="radio"
+                  name="mode"
+                  id="county_deaths"
+                  class="mode-btn"
+                />
+                County Covid Deaths
+              </label>
             </div>
           </div>
         </div>
@@ -200,7 +250,9 @@
             <div class="panel-heading">
               <h3 class="panel-title">Summary Statistics</h3>
             </div>
-            <div class="panel-body" id="summaryStats"></div>
+            <div class="panel-body" id="unempStats"></div>
+            <hr />
+            <div class="panel-body" id="covidStats"></div>
           </div>
           <div class="panel-footer" align="center">
             <a href="table.html">Data Table</a>
@@ -212,7 +264,7 @@
         <div class="well" align="center">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h3 class="panel-title">Initial Claims Over Time</h3>
+              <h3 class="panel-title" , id="top-plot-title"></h3>
             </div>
             <div class="panel-body" id="panel-plot">
               <div id="plot"></div>
@@ -226,7 +278,7 @@
         <div class="well" align="center">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h3 class="panel-title">Insured Unemployment Rate Over Time</h3>
+              <h3 class="panel-title" , id="bottom-plot-title"></h3>
             </div>
             <div class="panel-body" id="panel-plot">
               <div id="graph"></div>
@@ -238,22 +290,28 @@
 
       <!-- FOOTER -->
       <footer class="footer" align="center">
-        <span class="bottom"
-          >Luisa Zini | Rose Gonoud | Nathan Higley | Christian Thomson | Jesse
-          Caldwell
+        <span class="bottom">
+          Rose Gonoud | Shaun Ramirez | Alec Slaney | Ryan Dickson | Nathan
+          Higley | Luisa Zini | Christian Thomson | Jesse Caldwell
         </span>
       </footer>
     </div>
 
     <!-- Scripts -->
-    <script type="text/javascript" src="assets/js/config.js"></script>
     <script type="text/javascript" src="assets/data/stateData.js"></script>
+    <script type="text/javascript" src="assets/data/stateLookup.js"></script>
+    <script type="text/javascript" src="assets/data/fipsLookup.js"></script>
+    <script type="text/javascript" src="assets/js/config.js"></script>
+    <script type="text/javascript" src="assets/js/barGraphEmpl.js"></script>
     <script type="text/javascript" src="assets/js/covidData.js"></script>
-    <script type="text/javascript" src="assets/js/populatePulldown.js"></script>
+    <script
+      type="text/javascript"
+      src="assets/js/countyUnemployment.js"
+    ></script>
     <script type="text/javascript" src="assets/js/summarystats.js"></script>
     <script type="text/javascript" src="assets/js/logic.js"></script>
+    <script type="text/javascript" src="assets/js/populatePulldown.js"></script>
     <script type="text/javascript" src="assets/js/graph.js"></script>
     <script type="text/javascript" src="assets/js/plots.js"></script>
-    <script type="text/javascript" src="assets/js/populateTable.js"></script>
   </body>
 </html>

@@ -3,15 +3,12 @@ var myMap = L.map("map", {
   center: [39.5, -98.35],
   zoom: 4,
 });
-console.log(
-  "interpolateColors return",
-  interpolateColors("#008000", "#dfed00", 0.1)
-);
 
 addLayers(myMap);
 
-// global to hold the choropleth layer and legend, so we can remove it
-var geojson;
+// global to hold the choropleth layers and legend, so we can remove it
+var stateGeojson;
+var countyGeojson;
 var legend = null;
 
 /** Takes two color codes as strings and returns you a color code that is a proportion between them
@@ -102,7 +99,7 @@ function addLayers(myMap) {
  * @param {geoJSON OBJECT} geoData The geoJson that is returned from d3.json when querying the geojson file attached
  * @param {*} apiReturn The return from the API
  */
-function zipAPIDataToGeoJSON(geoData, apiReturn, mode) {
+function zipAPIDataToStateGeoJSON(geoData, apiReturn, mode) {
   //Create array of states in the order that the apiReturn came back in
   apiDataStates = apiReturn.map((datum) => datum.state);
 
@@ -123,17 +120,81 @@ function zipAPIDataToGeoJSON(geoData, apiReturn, mode) {
   return geoData;
 }
 
+/**
+ * Takes in geoJson object and appends data returned from the API to each states geoJSON entry
+ * @param {geoJSON OBJECT} geoData The geoJson that is returned from d3.json when querying the geojson file attached
+ * @param {*} apiReturn The return from the API
+ */
+function zipAPIDataToCountyGeoJSON(geoData, apiReturn, mode) {
+  //Create array of states in the order that the apiReturn came back in
+  countyCodes = apiReturn.map((datum) => {
+    let county_code = String(datum.county_code);
+    if (county_code.length < 5) {
+      county_code = "0" + county_code;
+    }
+
+    return county_code;
+  });
+
+  geoData.features.forEach((geoDatum) => {
+    countyFips = geoDatum.properties.STATE + geoDatum.properties.COUNTY;
+
+    // Lookup the corresponding entry from the API's data return with the most recent date that matches this entry by state
+    apiDataIndex = countyCodes.indexOf(countyFips);
+
+    let newProps = {
+      GEO_ID: geoDatum.properties.GEO_ID,
+      CENSUSAREA: geoDatum.properties.CENSUSAREA,
+      ...apiReturn[apiDataIndex],
+    };
+
+    geoDatum.properties = newProps;
+    geoDatum.mode = mode;
+  });
+
+  return geoData;
+}
+
 //Given a value returns a color code
 function getColor(d, mode) {
+  d = parseFloat(d);
   options = getColorModeOptions(mode);
 
-  for (var ii = 0; ii < options.bins.length; ii++) {
-    if (d > options.bins[ii]) {
-      return interpolateColors(
-        options.highColor,
-        options.lowColor,
-        ii / (options.bins.length - 1)
-      );
+  //If there is a midColor make a 3 color gradient
+  if (options.hasOwnProperty("midColor")) {
+    for (var ii = 0; ii < options.bins.length; ii++) {
+      currentBin = parseFloat(options.bins[ii]);
+      if (d >= currentBin) {
+        //If the bin is < halfway through the array
+        if (ii <= options.bins.length / 2) {
+          return interpolateColors(
+            options.highColor,
+            options.midColor,
+            parseFloat(ii) / (options.bins.length / 2)
+          );
+        } else {
+          let proportion =
+            (options.bins.length - 1 - parseFloat(ii)) /
+            (options.bins.length / 2);
+          return interpolateColors(
+            options.lowColor,
+            options.midColor,
+            proportion
+          );
+        }
+      }
+    }
+  }
+  //Otherwise make a 2 color gradient
+  else {
+    for (var ii = 0; ii < options.bins.length; ii++) {
+      if (d >= options.bins[ii]) {
+        return interpolateColors(
+          options.highColor,
+          options.lowColor,
+          parseFloat(ii) / (options.bins.length - 1)
+        );
+      }
     }
   }
 
@@ -142,31 +203,83 @@ function getColor(d, mode) {
 
 //Gets the color options for a given mode
 function getColorModeOptions(mode) {
-  console.log("mode", mode);
-
   if (mode == "initial_claims") {
     return {
       highColor: "#008000",
       lowColor: "#ffff00",
-      bins: [100000, 50000, 20000, 10000, 5000, 2000, 1000, 1],
+      bins: [100000, 50000, 20000, 10000, 5000, 2000, 1000, 500, 100],
     };
   } else if (mode == "confirmed") {
     return {
       highColor: "#e9294a",
       lowColor: "#f6a5b3",
-      bins: [100000, 50000, 20000, 10000, 5000, 2000, 1000, 1],
+      bins: [100000, 50000, 20000, 10000, 5000, 2000, 1000, 0],
     };
   } else if (mode == "continued_claims") {
     return {
       highColor: "#000080",
       lowColor: "#73c2fb",
-      bins: [1000000, 700000, 500000, 300000, 100000, 50000, 10000, 1],
+      bins: [1000000, 700000, 500000, 300000, 100000, 50000, 10000, 0],
     };
-  } else if ((mode = "deaths")) {
+  } else if (mode == "covid-unemployment-residual") {
+    return {
+      highColor: "#00DD00",
+      midColor: "#FFFFFF",
+      lowColor: "#DD0000",
+      bins: [
+        "0.20",
+        "0.15",
+        "0.10",
+        "0.05",
+        "0.00",
+        "-0.05",
+        "-0.10",
+        "-0.15",
+        "-0.20",
+      ],
+    };
+  } else if (mode == "deaths") {
     return {
       highColor: "#301934",
       lowColor: "#b19cd9",
-      bins: [3000, 2000, 1000, 500, 100, 50, 30, 10, 1],
+      bins: [3000, 2000, 1000, 500, 100, 50, 30, 10, 2, 0],
+    };
+  } else if (mode == "percent_unemployed") {
+    return {
+      highColor: "#EE0000",
+      lowColor: "#FFFFFF",
+      bins: [60, 50, 40, 30, 20, 10, 5, 2, 0],
+    };
+  } else if (mode == "total_unemployed") {
+    return {
+      highColor: "#EE0000",
+      lowColor: "#FFFFFF",
+      bins: [
+        2000000,
+        1000000,
+        500000,
+        100000,
+        50000,
+        10000,
+        5000,
+        2500,
+        1000,
+        500,
+        100,
+        0,
+      ],
+    };
+  } else if (mode == "county_confirmed") {
+    return {
+      highColor: "#1F3D0C",
+      lowColor: "#ffffff",
+      bins: [10000, 5000, 2500, 1000, 500, 250, 100, 50, 30, 10, 2, 0],
+    };
+  } else if (mode == "county_deaths") {
+    return {
+      highColor: "#1F3D0C",
+      lowColor: "#ffffff",
+      bins: [5000, 2500, 1000, 500, 250, 100, 75, 50, 30, 20, 10, 5, 2, 0],
     };
   }
 }
@@ -186,13 +299,8 @@ function addLegend(myMap, mode) {
     div.innerHTML += '<i style="background:' + "black" + '"></i> No Data <br>';
 
     // loop through our density intervals and generate a label with a colored square for each interval
-    for (let i = 1; i < grades.length; i++) {
-      div.innerHTML +=
-        '<i style="background:' +
-        getColor(grades[i] + 1, mode) +
-        '"></i> ' +
-        grades[i] +
-        (grades[i + 1] ? "&ndash;" + grades[i + 1] + "<br>" : "+");
+    for (let i = 0; i < grades.length; i++) {
+      div.innerHTML += makeLegendLabel(grades, mode, i);
     }
 
     return div;
@@ -201,18 +309,66 @@ function addLegend(myMap, mode) {
   legend.addTo(myMap);
 }
 
-function buildChloropleth(apiReturn, mode = "initial_claims") {
-  if (geojson) {
-    console.log("removing old geojson");
-    geojson.remove();
+//Makes the legend html for the ith grade in grades with colors determined by the mode
+//Creates legend labels conditionally on whether you have ints or floats in bins
+function makeLegendLabel(grades, mode, i) {
+  return (
+    '<i style="background:' +
+    getColor(parseFloat(grades[i]), mode) +
+    '"></i> ' +
+    grades[i] +
+    (grades.hasOwnProperty(i + 1)
+      ? "&ndash;" + decrementNum(grades[i + 1]) + "<br>"
+      : "+")
+  );
+}
+
+/**
+ * Returns the number reduced by one of its smallest digit
+ * @param {*} num
+ */
+function decrementNum(num) {
+  num_string = num.toString();
+  num = parseFloat(num);
+  dot = num_string.indexOf(".");
+
+  if (dot == -1) {
+    return num - 1;
+  } else {
+    //Get the number of digits between the . and the last digit
+    // 1.013 dot = 1 length = 5 we want 2 leading zeroes to make the number .001
+    // and decrement by that.
+    // 6 =>6 6.4-> 6.3 6.40001> 6.40000
+    let num_leading_zeroes = num_string.length - dot - 2;
+
+    let decrement_by = ".";
+    for (var ii = 0; ii < num_leading_zeroes; ii++) {
+      decrement_by += "0";
+    }
+    decrement_by += "1";
+
+    return (num - parseFloat(decrement_by)).toFixed(num_leading_zeroes + 1);
   }
+}
+
+// this function is necessary to control for variances in loading speed between county and state geojson layers
+//  both must be searched for and deleted at the time of a mode switch
+//  to ensure that the on-page-load county layer doesn't repopulate the map before a potential incoming state layer.
+function removeAllGeojson() {
+  stateGeojson && stateGeojson.remove();
+  countyGeojson && countyGeojson.remove();
+}
+
+//Generates a chloropleth map layer of states colored by the variable in the mode
+function buildStateChloropleth(apiReturn, mode = "initial_claims") {
+  removeAllGeojson();
 
   // Load in geojson data
   var geoDataPath = "assets/data/US.geojson";
 
   d3.json(geoDataPath, function (data) {
     apiReturn = filterMostRecentWeekData(apiReturn);
-    data = zipAPIDataToGeoJSON(data, apiReturn, mode);
+    data = zipAPIDataToStateGeoJSON(data, apiReturn, mode);
 
     function style(feature) {
       return {
@@ -234,12 +390,58 @@ function buildChloropleth(apiReturn, mode = "initial_claims") {
           <br/>Continued Claims: ${feature.properties.continued_claims}
           <br/>Unemployment Rate: ${
             feature.properties.insured_unemployment_rate
-          }
-          `
+          }%
+          <br/>Total Covid Cases: ${feature.properties.confirmed}
+          <br/>Total Covid Deaths: ${feature.properties.deaths}`
       );
     }
 
-    geojson = L.geoJson(data, {
+    stateGeojson = L.geoJson(data, {
+      style: style,
+      onEachFeature: onEachFeature,
+    }).addTo(myMap);
+  });
+
+  addLegend(myMap, mode);
+}
+
+//Generates a chloropleth map layer of counties colored by the variable in the mode
+function buildCountyChloropleth(apiReturn, mode = "initial_claims") {
+  removeAllGeojson();
+
+  // Load in geojson data
+  var geoDataPath = "assets/data/geojson-counties-fips.json";
+
+  d3.json(geoDataPath, function (data) {
+    apiReturn = filterMostRecentWeekData(apiReturn);
+    data = zipAPIDataToCountyGeoJSON(data, apiReturn, mode);
+
+    console.log("county_data", data);
+
+    function style(feature) {
+      return {
+        fillColor: getColor(feature.properties[mode], feature.mode),
+        weight: 1,
+        opacity: 1,
+        color: "black",
+        fillOpacity: 0.7,
+      };
+    }
+
+    function onEachFeature(feature, layer) {
+      layer.bindPopup(
+        `${feature.properties.county_name}
+        <br/>File Week Ended: ${moment(
+          feature.properties.file_week_ended
+        ).format("MMMM Do YYYY")}
+          <br/>Percent Unemployed: ${feature.properties.percent_unemployed}%
+          <br/>Total Unemployed: ${feature.properties.total_unemployed}
+          <br/>Total Covid Cases: ${feature.properties.confirmed}
+          <br/>Total Covid Deaths: ${feature.properties.deaths}`
+      );
+    }
+
+    countyGeojson = L.geoJson(data, {
       style: style,
       onEachFeature: onEachFeature,
     }).addTo(myMap);
