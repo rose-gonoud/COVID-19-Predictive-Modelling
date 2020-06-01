@@ -340,3 +340,8 @@ select {
 .table-head {
   font-size: 14pt;
 }
+
+img {
+  height: 70%;
+  width: 70%;
+}
