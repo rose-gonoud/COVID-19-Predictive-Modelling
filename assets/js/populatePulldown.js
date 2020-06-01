@@ -58,6 +58,9 @@ function optionChanged() {
 
   //Query county data
   if (countyModes.includes(selectedMode)) {
+    d3.select("#top-plot-title").text("COVID-19 Cases per State");
+    d3.select("#bottom-plot-title").text("Unemployed Persons per State");
+
     console.log("Querying county data...");
 
     // checks the cache, if empty, queries the county route on unemployment API, awaits promise return
@@ -87,8 +90,6 @@ function optionChanged() {
             mostRecentCountyUnemploymentData
           );
 
-          console.log("allCountyData", allCountyData);
-
           // filters out unselected states, if at least one state is selected
           if (selValues.length > 0) {
             console.log("filtering states...", selValues);
@@ -108,6 +109,8 @@ function optionChanged() {
   }
   //Query state data
   else {
+    d3.select("#top-plot-title").text("Initial Claims Over Time");
+    d3.select("#bottom-plot-title").text("Insured Unemployment Rate Over Time");
     //Build Unemployment API call
     baseURL =
       "https://unemployment-during-covid19.herokuapp.com/unemploymentData";
@@ -185,7 +188,6 @@ function stitchCountyData(covidData, countyUnemploymentData) {
     if (formattedCountyCode.length == 4) {
       formattedCountyCode = "0" + formattedCountyCode;
     }
-    //console.log("formattedCountyCode", formattedCountyCode);
 
     let state_abbr;
 
