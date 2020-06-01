@@ -96,6 +96,11 @@ function optionChanged() {
             allCountyData = allCountyData.filter((countyDatum) => {
               return selValues.includes(stateLookup[countyDatum.state]);
             });
+            covidData = covidData.filter((covidDatum) => {
+              return selValues.includes(
+                stateLookup[covidDatum.region.province]
+              );
+            });
           }
 
           console.log("allCountyData", allCountyData);
@@ -104,7 +109,6 @@ function optionChanged() {
           populateCountySummaryStats(allCountyData);
           buildEmplBarGraph(allCountyData);
           covidBarGraph(covidData);
-
         });
       }
     );
