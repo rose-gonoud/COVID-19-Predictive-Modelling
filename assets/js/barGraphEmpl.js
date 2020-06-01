@@ -74,7 +74,8 @@ function buildEmplBarGraph(graphData){
   Plotly.newPlot(id='graph', data, layout);
 }
 
-//County level Covid-19 BarGraph
+
+//*******County level Covid-19 BarGraph*******
 function covidBarGraph(covData){
 
   covidCountyData = {};
