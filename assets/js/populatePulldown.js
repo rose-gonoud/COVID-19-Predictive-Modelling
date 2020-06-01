@@ -102,7 +102,9 @@ function optionChanged() {
 
           buildCountyChloropleth(allCountyData, selectedMode);
           populateCountySummaryStats(allCountyData);
-          buildBarGraph(allCountyData);
+          buildEmplBarGraph(allCountyData);
+          covidBarGraph(covidData);
+
         });
       }
     );
