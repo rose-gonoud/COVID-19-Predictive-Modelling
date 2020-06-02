@@ -34,8 +34,8 @@ function pullDownMenu() {
  * When the select dropdown or one of the date filters is changed this function will fire
  */
 function optionChanged() {
+  // selValues grabs all states selected in dropdown multiselect, throws in array
   selValues = $("#selState").val();
-  // d3.select("#h-pulldown").text(selValues);
 
   let startDate = d3.select("#startDate").property("value");
   let endDate = d3.select("#endDate").property("value");
@@ -78,6 +78,7 @@ function optionChanged() {
         //Display the date the map refelcts
         addMapDetails(mostRecentCountyUnemploymentDate);
 
+        // checks the cache, if empty, queries the Rapid API, awaits promise return
         getCovidData(mostRecentCountyUnemploymentDate).then((covidData) => {
           console.log(
             "county covid return",
