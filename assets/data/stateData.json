@@ -48,6 +48,12 @@
     "abbr": "DE"
   },
   {
+    "state": "District of Columbia",
+    "latitude": 38.9072,
+    "longitude": -77.0369,
+    "abbr": "DC"
+  },
+  {
     "state": "Florida",
     "latitude": 27.8333,
     "longitude": -81.717,
@@ -228,6 +234,12 @@
     "abbr": "PA"
   },
   {
+    "state": "Puerto Rico",
+    "latitude": 18.2208,
+    "longitude": -66.5901,
+    "abbr": "PR"
+  },
+  {
     "state": "Rhode Island",
     "latitude": 41.6772,
     "longitude": -71.5101,
@@ -264,16 +276,22 @@
     "abbr": "UT"
   },
   {
+    "state": "Virgin Islands",
+    "latitude": 18.3358,
+    "longitude": -64.8963,
+    "abbr": "VI"
+  },
+  {
     "state": "Virginia",
     "latitude": 37.768,
     "longitude": -78.2057,
-    "abbr": "VT"
+    "abbr": "VA"
   },
   {
     "state": "Vermont",
     "latitude": 44.0407,
     "longitude": -72.7093,
-    "abbr": "VA"
+    "abbr": "VT"
   },
   {
     "state": "Washington",
